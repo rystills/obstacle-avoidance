@@ -23,17 +23,25 @@ public class initSinPath : MonoBehaviour {
 		//grab a reference to the points component
 		PP = gameObject.GetComponent<pathPoints>();
 
-		//calculate the camrea extents so we can fine-tune the path layout
+		//calculate the camera extents so we can fine-tune the path layout
 		float hHeight = Camera.main.orthographicSize;
 		float hWidth = hHeight * Screen.width / Screen.height;
 
-		//create some test points
-		PP.points.Add(new Vector3(0, 0, 0));
-		PP.points.Add(new Vector3(hWidth, hHeight, 0));
-		PP.points.Add(new Vector3(hWidth, -hHeight, 0));
+		//create the points on our sin curve (remember y = asin(b(x - c)) + d)
+		for (int r = 0; r < numCycles; ++r) {
+			for (int i = 0; i < pointsPerCycle; ++i) {
+				//we can calculate x by shifting along the current period by the current point
+				float x = 2 * Mathf.PI * (period * (r+i / (float)pointsPerCycle));
+				//once we have x, we plug that into our sin function to get y
+				float y = amplitude * Mathf.Sin(1/period * x);
+				PP.points.Add(new Vector3(x,y,0));
+			}	
+		}
 
+		LR.startWidth = .5f;
+		LR.endWidth = .5f;
 		//copy our points into the line renderer so that they appear on-screen
-		LR.SetVertexCount(PP.points.Count);
+		LR.numPositions = PP.points.Count;
 		LR.SetPositions(PP.points.ToArray());		
 	}
 }
