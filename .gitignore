@@ -79,3 +79,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# ignore .xcf files, as these are only used in development
+*.xcf
+*.xcf.meta
