@@ -9,30 +9,11 @@ public class followPath : MonoBehaviour {
 	public float spd;
 	public int curPt = 0;
 
-	/**
-	 *	rotate to face towards the desired point
-	 *	@param loc: the location in space towards which we should face
-	 */
-	void lookAt2d(Vector3 loc) {
-		Vector3 diff = loc - transform.position;
-		diff.Normalize();
-
-		float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
-		transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
-	}
-
-	/**
-	 * Overloads lookAt2d to support a Vector2d location
-	 */
-	void lookAt2d(Vector2 loc) {
-		lookAt2d(new Vector3(loc.x, loc.y, 0));
-	}
-
 	void Start () {
 		//grab the point list from our path and move to point 0
 		PP = path.GetComponent<pathPoints>();
 		transform.position = PP.points[curPt];
-		this.lookAt2d(PP.points[curPt + 1]);
+		GM.lookAt2d(this.gameObject,PP.points[curPt + 1]);
 	}
 
 	void Update() {
@@ -50,7 +31,7 @@ public class followPath : MonoBehaviour {
 					curPt = -1;
 				}
 				//update our direction to face the next point
-				this.lookAt2d(PP.points[curPt + 1]);
+				GM.lookAt2d(this.gameObject,PP.points[curPt + 1]);
 			}
 			else {
 				//we can't reach the next point; simply move forward as much as we can
