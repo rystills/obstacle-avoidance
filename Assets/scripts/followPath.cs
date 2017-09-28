@@ -9,7 +9,7 @@ public class followPath : MonoBehaviour {
 	public float spd;
 	public int curPt = 0;
 
-	void Start () {
+	public void init() {
 		//grab the point list from our path and move to point 0
 		PP = path.GetComponent<pathPoints>();
 		transform.position = PP.points[curPt];
