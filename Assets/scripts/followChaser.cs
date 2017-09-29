@@ -18,6 +18,14 @@ public class followChaser : MonoBehaviour {
 		float remDist = Vector3.Distance(transform.position, leader.transform.position);
 		float moveDist = spd * Time.deltaTime;
 		transform.Translate(Vector3.up * (moveDist > remDist ? remDist : moveDist));
-
+		//poll through all other flock units to check for collisions
+		GameObject[] others = GameObject.FindGameObjectsWithTag("flockUnit");
+		for (int i = 0; i < others.Length; ++i) {
+			//don't check for a collision with yourself
+			if (others[i] == this) {
+				continue;
+			}
+			GM.moveOutsideCollision(gameObject, others[i]);
+		}
 	}
 }

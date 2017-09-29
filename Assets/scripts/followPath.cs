@@ -13,7 +13,7 @@ public class followPath : MonoBehaviour {
 		//grab the point list from our path and move to point 0
 		PP = path.GetComponent<pathPoints>();
 		transform.position = PP.points[curPt];
-		GM.lookAt2d(this.gameObject,PP.points[curPt + 1]);
+		GM.lookAt2d(gameObject,PP.points[curPt + 1]);
 	}
 
 	void Update() {
@@ -31,7 +31,7 @@ public class followPath : MonoBehaviour {
 					curPt = -1;
 				}
 				//update our direction to face the next point
-				GM.lookAt2d(this.gameObject,PP.points[curPt + 1]);
+				GM.lookAt2d(gameObject,PP.points[curPt + 1]);
 			}
 			else {
 				//we can't reach the next point; simply move forward as much as we can

@@ -281,8 +281,8 @@ MonoBehaviour:
     type: 2}
   flockUnitPrefab: {fileID: 1157432743109166, guid: 5863d05c8f7658049afbcd650e9f63b4,
     type: 2}
-  flockSpd: 5
-  flockMaxSpd: 6
+  chaserSpd: 5
+  flockSpd: 6
 --- !u!1001 &1539472274
 Prefab:
   m_ObjectHideFlags: 0
@@ -372,7 +372,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1649894656}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -2.1036067}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
