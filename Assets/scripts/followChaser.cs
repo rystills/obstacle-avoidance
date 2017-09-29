@@ -22,10 +22,12 @@ public class followChaser : MonoBehaviour {
 		GameObject[] others = GameObject.FindGameObjectsWithTag("flockUnit");
 		for (int i = 0; i < others.Length; ++i) {
 			//don't check for a collision with yourself
-			if (others[i] == this) {
+			if (others[i] == this.gameObject) {
 				continue;
 			}
-			GM.moveOutsideCollision(gameObject, others[i]);
+			this.gameObject.SetActive(true);
+			others[i].SetActive(true);
+			GM.moveOutsideCollision(this.gameObject, others[i]);
 		}
 	}
 }

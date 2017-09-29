@@ -25,13 +25,24 @@ public class GM : MonoBehaviour {
 		Bounds ab = a.GetComponent<Renderer>().bounds;
 		Bounds bb = b.GetComponent<Renderer>().bounds;
 		bool initialCollision = false;
-		while (ab.Intersects(bb)) {
+		if (ab.Intersects(bb)) {
 			initialCollision = true;
-			Vector3 pos = a.transform.position;
-			float dir = a.transform.rotation.eulerAngles.z;
-			Debug.Log(pos.x + Mathf.Cos(dir) * 10);
-			a.transform.position = new Vector3(pos.x + Mathf.Cos(dir) * 10, pos.y + pos.y * Mathf.Sin(dir) * 10, pos.z);
-			return true;
+			Vector3 origAngle = a.transform.eulerAngles;
+			a.transform.eulerAngles += 180f * Vector3.up;
+			int i = 0;
+			while (ab.Intersects(bb)) {
+				//a.transform.Translate(1 * Vector3.up);
+				float dir = a.transform.rotation.eulerAngles.z;
+				ab.center = new Vector3(ab.center.x + Mathf.Cos(dir) * .01f, ab.center.y + ab.center.y * Mathf.Sin(dir) * .01f, ab.center.z);
+				++i;
+				/*if (++i == 50) {
+					Debug.Log("oh well");
+					a.transform.eulerAngles = origAngle;
+					return true;
+				}*/
+			}
+			a.transform.Translate(Vector3.up * i * .001f);
+			a.transform.eulerAngles = origAngle;
 		}
 		return initialCollision;
 	}

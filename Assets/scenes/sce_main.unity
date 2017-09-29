@@ -277,9 +277,9 @@ MonoBehaviour:
   paths:
   - {fileID: 140255927}
   - {fileID: 463660700}
-  chaserPrefab: {fileID: 1621660891266350, guid: a1325cd3c5881a046b9bc043da15632e,
+  chaserPrefab: {fileID: 1599269507442452, guid: a1325cd3c5881a046b9bc043da15632e,
     type: 2}
-  flockUnitPrefab: {fileID: 1157432743109166, guid: 5863d05c8f7658049afbcd650e9f63b4,
+  flockUnitPrefab: {fileID: 1796433142108290, guid: 66dbeabf3cade9c44ad5cc693f7bea06,
     type: 2}
   chaserSpd: 5
   flockSpd: 6
