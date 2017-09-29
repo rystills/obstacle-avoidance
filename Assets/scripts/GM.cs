@@ -22,16 +22,19 @@ public class GM : MonoBehaviour {
 	 * @param b: the object to check for collisions against
 	 */
 	public static void moveOutsideCollision(GameObject a, GameObject b) {
+		//grab the radii and positions of both objects
 		float aRad = a.GetComponent<followChaser>().radius;
 		float bRad = b.GetComponent<followChaser>().radius;
 		Vector3 aPos = a.transform.position;
 		Vector3 bPos = b.transform.position;
-		float dist = Vector3.Distance(aPos, bPos);
 
+		//check if the distance between the objects indicates a collision between their radii
+		float dist = Vector3.Distance(aPos, bPos);
 		if (dist < aRad + bRad) {
+			//the objects' radii are intersecting; calculate the magnitude of that intersection and move back by that amount
 			float intersection = (aRad + bRad) - dist;
 			float aDir = a.transform.rotation.eulerAngles.z;
-			a.transform.position = new Vector3(aPos.x - aPos.x * Mathf.Cos(aDir) * intersection, aPos.y - aPos.y * Mathf.Sin(aDir) * intersection, aPos.z);
+			a.transform.Translate(Vector3.up * -intersection);
 		}
 	}
 
