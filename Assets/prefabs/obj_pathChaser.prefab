@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   path: {fileID: 0}
-  spd: 5
+  spd: 3
   curPt: 0
 --- !u!212 &212338323309074058
 SpriteRenderer:

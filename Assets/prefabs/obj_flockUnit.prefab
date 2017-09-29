@@ -53,7 +53,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leader: {fileID: 0}
-  spd: 0
+  spd: 4
+  radius: 0.2
 --- !u!212 &212867915749167504
 SpriteRenderer:
   m_ObjectHideFlags: 1

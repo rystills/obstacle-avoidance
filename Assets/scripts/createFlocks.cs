@@ -6,8 +6,7 @@ public class createFlocks : MonoBehaviour {
 	public List<GameObject> paths;
 	public GameObject chaserPrefab;
 	public GameObject flockUnitPrefab;
-	public float chaserSpd;
-	public float flockSpd;
+	public List<Sprite> flockSprites;
 
 	void Start () {
 		//create a chaser and flock unit on each path
@@ -18,17 +17,16 @@ public class createFlocks : MonoBehaviour {
 			//manually initialize the chaser's followPath component with the desired properties
 			followPath fp = chaser.GetComponent<followPath>();
 			fp.path = paths[i];
-			fp.spd = chaserSpd;
 			fp.curPt = 0;
 			fp.init();
 
-			for (int r = 0; r < 1; ++r) {
-				//now we create as many flock units as desired
+			//now we create as many flock units as desired
+			for (int r = 0; r < 10; ++r) {
 				GameObject flockUnit = (GameObject)Instantiate(flockUnitPrefab, startPos, Quaternion.identity);
+				flockUnit.GetComponent<SpriteRenderer>().sprite = flockSprites[i];
 				//initialize the flock unit's followChaser component with the desired properties 
 				followChaser fc = flockUnit.GetComponent<followChaser>();
 				fc.leader = chaser;
-				fc.spd = flockSpd;
 				fp.init();
 				//ofset each flock unit by a different amount, so that they do not begin on top of each other
 				Vector3 curPos = fc.transform.position;
