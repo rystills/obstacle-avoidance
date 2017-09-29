@@ -5,6 +5,7 @@ using UnityEngine;
 public class followChaser : MonoBehaviour {
 	public GameObject leader;
 	public float spd;
+	public float radius;
 	
 	void init() {
 		//adopt a slightly faster speed than the leader so that we do not fall out of formation
@@ -18,6 +19,7 @@ public class followChaser : MonoBehaviour {
 		float remDist = Vector3.Distance(transform.position, leader.transform.position);
 		float moveDist = spd * Time.deltaTime;
 		transform.Translate(Vector3.up * (moveDist > remDist ? remDist : moveDist));
+
 		//poll through all other flock units to check for collisions
 		GameObject[] others = GameObject.FindGameObjectsWithTag("flockUnit");
 		for (int i = 0; i < others.Length; ++i) {
@@ -25,8 +27,6 @@ public class followChaser : MonoBehaviour {
 			if (others[i] == this.gameObject) {
 				continue;
 			}
-			this.gameObject.SetActive(true);
-			others[i].SetActive(true);
 			GM.moveOutsideCollision(this.gameObject, others[i]);
 		}
 	}

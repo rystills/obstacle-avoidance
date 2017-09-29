@@ -281,8 +281,8 @@ MonoBehaviour:
     type: 2}
   flockUnitPrefab: {fileID: 1796433142108290, guid: 66dbeabf3cade9c44ad5cc693f7bea06,
     type: 2}
-  chaserSpd: 5
-  flockSpd: 6
+  chaserSpd: 2
+  flockSpd: 3
 --- !u!1001 &1539472274
 Prefab:
   m_ObjectHideFlags: 0

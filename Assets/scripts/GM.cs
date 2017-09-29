@@ -17,34 +17,22 @@ public class GM : MonoBehaviour {
 
 	/**
 	 * move a GameObject backwards until it is no longer colliding with the other specified GameObject
+	 * assumes circular colliders to keep things as simple as possible
 	 * @param a: the object to move backwards
 	 * @param b: the object to check for collisions against
-	 * @returns whether a was initially colliding with b (true) or not (false)
 	 */
-	public static bool moveOutsideCollision(GameObject a, GameObject b) {
-		Bounds ab = a.GetComponent<Renderer>().bounds;
-		Bounds bb = b.GetComponent<Renderer>().bounds;
-		bool initialCollision = false;
-		if (ab.Intersects(bb)) {
-			initialCollision = true;
-			Vector3 origAngle = a.transform.eulerAngles;
-			a.transform.eulerAngles += 180f * Vector3.up;
-			int i = 0;
-			while (ab.Intersects(bb)) {
-				//a.transform.Translate(1 * Vector3.up);
-				float dir = a.transform.rotation.eulerAngles.z;
-				ab.center = new Vector3(ab.center.x + Mathf.Cos(dir) * .01f, ab.center.y + ab.center.y * Mathf.Sin(dir) * .01f, ab.center.z);
-				++i;
-				/*if (++i == 50) {
-					Debug.Log("oh well");
-					a.transform.eulerAngles = origAngle;
-					return true;
-				}*/
-			}
-			a.transform.Translate(Vector3.up * i * .001f);
-			a.transform.eulerAngles = origAngle;
+	public static void moveOutsideCollision(GameObject a, GameObject b) {
+		float aRad = a.GetComponent<followChaser>().radius;
+		float bRad = b.GetComponent<followChaser>().radius;
+		Vector3 aPos = a.transform.position;
+		Vector3 bPos = b.transform.position;
+		float dist = Vector3.Distance(aPos, bPos);
+
+		if (dist < aRad + bRad) {
+			float intersection = (aRad + bRad) - dist;
+			float aDir = a.transform.rotation.eulerAngles.z;
+			a.transform.position = new Vector3(aPos.x - aPos.x * Mathf.Cos(aDir) * intersection, aPos.y - aPos.y * Mathf.Sin(aDir) * intersection, aPos.z);
 		}
-		return initialCollision;
 	}
 
 	/**
