@@ -28,7 +28,7 @@ public class createFlocks : MonoBehaviour {
 				//initialize the flock unit's followChaser component with the desired properties 
 				followChaser fc = flockUnit.GetComponent<followChaser>();
 				fc.leader = chaser;
-				fp.init();
+				fc.init();
 				//ofset each flock unit by a different amount, so that they do not begin on top of each other
 				Vector3 curPos = fc.transform.position;
 				fc.transform.position = new Vector3(curPos.x + .4f*(numUnitsPerFlock/2f +.5f - r), curPos.y, curPos.z);

@@ -9,36 +9,28 @@ public class followChaser : MonoBehaviour {
 	public float coneLength;
 	public float coneArc;
 
-	void init() {
+	//we will line renderer to display our cone check visually
+	private LineRenderer LR;
+
+	public void init() {
 		//adopt a slightly faster speed than the leader so that we do not fall out of formation
 		spd = leader.GetComponent<followPath>().spd + 1;
 		transform.position = leader.transform.position;
 
-		//create a triangle representing this unit's cone (for collision checking)
-		Mesh mesh = new Mesh();
-		GetComponent<MeshFilter>().mesh = mesh;
+		//initialize our line renderer
+		LR = gameObject.AddComponent<LineRenderer>();
 
-		//create the verts, tris, and uvs necessary for our triangle
-		Vector3[] verts = new Vector3[3];
-		verts[0] = new Vector3(0,-coneArc/2,0);
-		verts[1] = new Vector3(coneLength,0,0);
-		verts[2] = new Vector3(0,coneArc/2,0);
-		mesh.vertices = verts;
+		//set some default values for the line renderer settings
+		LR.startWidth = .02f;
+		LR.endWidth = .02f;
 
-		int[] tris = new int[3];
-		tris[0] = 0;
-		tris[1] = 2;
-		tris[2] = 1;
-		mesh.triangles = tris;
+		LR.material = new Material(Shader.Find("Unlit/Color"));
+		LR.material.color = Color.yellow;
 
-		Vector2[] uvs = new Vector2[3];
-		uvs[0] = new Vector2(0, 0);
-		uvs[1] = new Vector2(1, 0);
-		uvs[2] = new Vector2(1, 1);
-		mesh.uv = uvs;
+		LR.numPositions = 4;
 	}
 
-	void Update () {
+	void Update() {
 		//approach the leader without passing it
 		GM.lookAt2d(this.gameObject, leader.transform.position);
 		float remDist = Vector3.Distance(transform.position, leader.transform.position);
@@ -54,5 +46,26 @@ public class followChaser : MonoBehaviour {
 			}
 			GM.moveOutsideCollision(this.gameObject, others[i]);
 		}
+
+		//once we've finalized our position and orientation for the frame, update our line renderer
+		//start by setting the first and last points of the cone render to our starting position
+		LR.SetPosition(0, new Vector3(transform.position.x, transform.position.y, transform.position.z));
+		LR.SetPosition(3, new Vector3(transform.position.x, transform.position.y, transform.position.z));
+
+		//get the two additional points of our cone
+		Quaternion curRot = transform.rotation;
+		Vector3 curPos = transform.position;
+		for (int i = 0; i < 2; ++i) {
+			//set our rotation to half of our arc radius and move forward by our arc length
+			transform.rotation = curRot * Quaternion.Euler(0, 0, coneArc * (i == 0 ? -1 : 1));
+			transform.Translate(Vector3.up * coneLength);
+			//add this new position to the line renderer
+			LR.SetPosition(i+1, new Vector3(transform.position.x, transform.position.y, transform.position.z));
+			//move back to our starting position
+			transform.position = curPos;
+		}
+
+		//reset our rotation now that we've located all of the cone points
+		transform.rotation = curRot;
 	}
 }
