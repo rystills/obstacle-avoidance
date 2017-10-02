@@ -22,20 +22,29 @@ public class GM : MonoBehaviour {
 	 * @param b: the object to check for collisions against
 	 */
 	public static void moveOutsideCollision(GameObject a, GameObject b) {
+		//check the intersection between objects a and b
+		float intersect = checkCollision(a, b);
+		if (intersect != -1) {
+			//move a backwards by the magnitude of the intersection between a and b
+			a.transform.Translate(Vector3.up * -intersect);
+		}
+	}
+
+	/**
+	 * checks for a collision between objects a and b, returning their intersection if a collision is found
+	 * @param a: the first gameObject to check
+	 * @param b: the second gameObject to check
+	 * @returns the magnitude of the intersection between a and b if a collision is found, or -1 if no collision is found
+	 */
+	public static float checkCollision(GameObject a, GameObject b) {
 		//grab the radii and positions of both objects
 		float aRad = a.GetComponent<followChaser>().radius;
 		float bRad = b.GetComponent<followChaser>().radius;
-		Vector3 aPos = a.transform.position;
-		Vector3 bPos = b.transform.position;
 
 		//check if the distance between the objects indicates a collision between their radii
-		float dist = Vector3.Distance(aPos, bPos);
-		if (dist < aRad + bRad) {
-			//the objects' radii are intersecting; calculate the magnitude of that intersection and move back by that amount
-			float intersection = (aRad + bRad) - dist;
-			float aDir = a.transform.rotation.eulerAngles.z;
-			a.transform.Translate(Vector3.up * -intersection);
-		}
+		float dist = Vector3.Distance(a.transform.position, b.transform.position);
+		//if objects' radii are intersecting, return the magnitude of that intersection
+		return (dist < aRad + bRad ? (aRad + bRad) - dist : -1);
 	}
 
 	/**

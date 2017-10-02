@@ -196,7 +196,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.14514418, g: 0.2732308, b: 0.47450984, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -284,6 +284,7 @@ MonoBehaviour:
   flockSprites:
   - {fileID: 21300000, guid: 1c28c0ef4b640e74b89a69f63f9815e5, type: 3}
   - {fileID: 21300000, guid: 78551647f2f1bcd4f9e19db86c90528e, type: 3}
+  numUnitsPerFlock: 6
 --- !u!1001 &1539472274
 Prefab:
   m_ObjectHideFlags: 0
