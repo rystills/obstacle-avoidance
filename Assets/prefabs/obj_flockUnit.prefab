@@ -55,6 +55,8 @@ MonoBehaviour:
   leader: {fileID: 0}
   spd: 4
   radius: 0.2
+  coneLength: 50
+  coneArc: 3
 --- !u!212 &212867915749167504
 SpriteRenderer:
   m_ObjectHideFlags: 1

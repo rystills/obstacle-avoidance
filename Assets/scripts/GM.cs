@@ -16,6 +16,16 @@ public class GM : MonoBehaviour {
 	}
 
 	/**
+	 * get a list of objcets contained in a cone extended from object a
+	 * @param a: the object from which to extend the cone
+	 * @returns a list of GameObjects colliding with the cone
+	 */ 
+	public static List<GameObject> coneCheck(GameObject a) {
+		List<GameObject> hits = new List<GameObject>();
+		return hits;
+	}
+
+	/**
 	 * move a GameObject backwards until it is no longer colliding with the other specified GameObject
 	 * assumes circular colliders to keep things as simple as possible
 	 * @param a: the object to move backwards
