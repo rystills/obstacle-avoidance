@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 //GameManager class for storing global functions
 public class GM : MonoBehaviour {
@@ -17,13 +16,21 @@ public class GM : MonoBehaviour {
 	}
 	
 	/**
-	 * perform a cone collision check against all specified objects, avoid them if necessary
+	 * perform a cone collision check against all specified objects, avoiding them if necessary
 	 * @param a: the object from which to perform a cone check
 	 * @param objs: the list of objects to check against
 	 */
-	public static void avoidConeCollisions(GameObject a, IEnumerable<GameObject> objs) {
+	public static void avoidConeCollisions(GameObject a, List<GameObject> objs) {
+		//perform a cone check on each passed in object
+		followChaser fc = a.GetComponent<followChaser>();
+		int maxTurn = 10;
 		foreach (GameObject o in objs) {
-			coneCheck(a, o); 
+			if (coneCheck(a, o)) {
+				Debug.Log("cone check passed");
+				//cone check returned a collision; turn at a rate inversely proportional to our distance from the object
+				a.transform.rotation *= Quaternion.Euler(0, 0, maxTurn * (fc.coneLength / Vector3.Distance(a.transform.position, o.transform.position)));
+
+			} 
 		}
 	}
 
@@ -34,7 +41,9 @@ public class GM : MonoBehaviour {
 	 * @returns whether b is contained in the cone extending from a (true) or not (false)
 	 */
 	public static bool coneCheck(GameObject a, GameObject b) {
-		return true;
+		Vector3 forward = a.transform.rotation.eulerAngles;
+		Vector3 direction = (b.transform.position - a.transform.position).normalized;
+		return Vector3.Dot(forward, direction) > Mathf.Cos(a.GetComponent<followChaser>().coneLength/2);
 	}
 
 	/**

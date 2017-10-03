@@ -37,8 +37,9 @@ public class followChaser : MonoBehaviour {
 		float remDist = Vector3.Distance(transform.position, leader.transform.position);
 		float moveDist = spd * Time.deltaTime;
 
-		//perform a cone check for collisions, and if any are found, adjust our rotation to avoid them
-		GM.avoidConeCollisions(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where(x => x.GetComponent<followChaser>().leader != this.leader));
+		//perform a cone check for collisions with objects not on our path, adjusting our rotation to avoid them
+		GM.avoidConeCollisions(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
+			(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
 
 		transform.Translate(Vector3.up * (moveDist > remDist ? remDist : moveDist));
 
