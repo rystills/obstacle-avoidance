@@ -41,9 +41,9 @@ public class GM : MonoBehaviour {
 	 * @returns whether b is contained in the cone extending from a (true) or not (false)
 	 */
 	public static bool coneCheck(GameObject a, GameObject b) {
-		Vector3 forward = a.transform.rotation.eulerAngles;
-		Vector3 direction = (b.transform.position - a.transform.position).normalized;
-		return Vector3.Dot(forward, direction) > Mathf.Cos(a.GetComponent<followChaser>().coneLength/2);
+		var cone = Mathf.Cos(a.GetComponent<followChaser>().coneArc/2 * Mathf.Deg2Rad);
+		var heading = (b.transform.position - a.transform.position).normalized;
+		return (Vector3.Dot(a.transform.up, heading) > cone) && Vector3.Distance(a.transform.position, b.transform.position) < a.GetComponent<followChaser>().coneLength;
 	}
 
 	/**
