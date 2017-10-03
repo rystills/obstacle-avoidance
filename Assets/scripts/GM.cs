@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 //GameManager class for storing global functions
 public class GM : MonoBehaviour {
@@ -14,15 +15,26 @@ public class GM : MonoBehaviour {
 	void OnDestroy() {
 		m_Instance = null;
 	}
+	
+	/**
+	 * perform a cone collision check against all specified objects, avoid them if necessary
+	 * @param a: the object from which to perform a cone check
+	 * @param objs: the list of objects to check against
+	 */
+	public static void avoidConeCollisions(GameObject a, IEnumerable<GameObject> objs) {
+		foreach (GameObject o in objs) {
+			coneCheck(a, o); 
+		}
+	}
 
 	/**
-	 * get a list of objcets contained in a cone extended from object a
+	 * determine whether or not a cone extended from object a contains object b
 	 * @param a: the object from which to extend the cone
-	 * @returns a list of GameObjects colliding with the cone
-	 */ 
-	public static List<GameObject> coneCheck(GameObject a) {
-		List<GameObject> hits = new List<GameObject>();
-		return hits;
+	 * @param b: the object to check against the cone
+	 * @returns whether b is contained in the cone extending from a (true) or not (false)
+	 */
+	public static bool coneCheck(GameObject a, GameObject b) {
+		return true;
 	}
 
 	/**

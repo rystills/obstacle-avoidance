@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class followChaser : MonoBehaviour {
@@ -32,19 +33,23 @@ public class followChaser : MonoBehaviour {
 
 	void Update() {
 		//approach the leader without passing it
-		GM.lookAt2d(this.gameObject, leader.transform.position);
+		GM.lookAt2d(gameObject, leader.transform.position);
 		float remDist = Vector3.Distance(transform.position, leader.transform.position);
 		float moveDist = spd * Time.deltaTime;
+
+		//perform a cone check for collisions, and if any are found, adjust our rotation to avoid them
+		GM.avoidConeCollisions(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where(x => x.GetComponent<followChaser>().leader != this.leader));
+
 		transform.Translate(Vector3.up * (moveDist > remDist ? remDist : moveDist));
 
 		//poll through all other flock units to check for collisions
 		GameObject[] others = GameObject.FindGameObjectsWithTag("flockUnit");
 		for (int i = 0; i < others.Length; ++i) {
 			//don't check for a collision with yourself
-			if (others[i] == this.gameObject) {
+			if (others[i] == gameObject) {
 				continue;
 			}
-			GM.moveOutsideCollision(this.gameObject, others[i]);
+			GM.moveOutsideCollision(gameObject, others[i]);
 		}
 
 		//once we've finalized our position and orientation for the frame, update our line renderer

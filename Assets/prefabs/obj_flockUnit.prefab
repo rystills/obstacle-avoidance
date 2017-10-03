@@ -53,9 +53,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leader: {fileID: 0}
-  spd: 4
+  spd: 2
   radius: 0.2
-  coneLength: 1.25
+  coneLength: 1.75
   coneArc: 30
 --- !u!212 &212867915749167504
 SpriteRenderer:
