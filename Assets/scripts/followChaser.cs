@@ -10,7 +10,6 @@ public class followChaser : MonoBehaviour {
 	public float coneLength;
 	public float coneArc;
 	public int coneHitsThisFrame = 0;
-	private float stepAngVel = .01f;
 
 	private float? colPredX = null;
 	private float? colPredY = null;
@@ -18,23 +17,27 @@ public class followChaser : MonoBehaviour {
 	//we will use a line renderer to display our cone check and collision prediction
 	private LineRenderer coneLR;
 	private LineRenderer predLR;
+	private GameObject colPredDrawer;
 
 	public void init() {
 		//adopt a slightly faster speed than the leader so that we do not fall out of formation
 		spd = leader.GetComponent<followPath>().spd + 1;
 		transform.position = leader.transform.position;
 
+		//instantiate a child object who will be responsible for rendering our predicted collision location when necessary
+		colPredDrawer = new GameObject();
+
 		//initialize our line renderers and set their render order to be in front of the path but behind the UI
 		coneLR = gameObject.AddComponent<LineRenderer>();
 		coneLR.sortingOrder = 1;
-		predLR = gameObject.AddComponent<LineRenderer>();
+		predLR = colPredDrawer.AddComponent<LineRenderer>();
 		predLR.sortingOrder = 2;
 
 		//set some default values for the line renderer settings
 		coneLR.startWidth = .02f;
 		coneLR.endWidth = .02f;
-		predLR.startWidth = 2f;
-		predLR.endWidth = 2f;
+		predLR.startWidth = .25f;
+		predLR.endWidth = .25f;
 
 		coneLR.material = new Material(Shader.Find("GUI/Text Shader"));
 		coneLR.material.color = Color.yellow;
@@ -42,7 +45,7 @@ public class followChaser : MonoBehaviour {
 		predLR.material.color = Color.red;
 
 		coneLR.numPositions = 4;
-		predLR.numPositions = 30;
+		predLR.numPositions = 20;
 	}
 
 	void Update() {
@@ -105,14 +108,14 @@ public class followChaser : MonoBehaviour {
 			transform.position = curPos;
 		}
 
-		//move move our collision prediction line renderer into place, if we have an active collision prediction
+		//move our collision prediction line renderer into place, and calculate some points around it
 		if (colPredX != null) {
 			predLR.enabled = true;
 			for (int i = 0; i < predLR.numPositions; ++i) {
-				float angle = i / (predLR.numPositions-1) * 2 * Mathf.PI;
-				float px = colPredX.Value + Mathf.Cos(angle);
-				float py = colPredY.Value + Mathf.Sin(angle);
-				coneLR.SetPosition(0, new Vector3(px, py, 0));
+				float angle = (float)i / (predLR.numPositions - 2) * 2 * Mathf.PI;
+				float px = colPredX.Value + Mathf.Cos(angle) * .1f;
+				float py = colPredY.Value + Mathf.Sin(angle) * .1f;
+				predLR.SetPosition(i, new Vector3(px, py, 0));
 			}
 		}
 		else {
