@@ -45,7 +45,7 @@ public class followChaser : MonoBehaviour {
 		coneLR.material = new Material(Shader.Find("GUI/Text Shader"));
 		coneLR.material.color = Color.yellow;
 		predLR.material = new Material(Shader.Find("GUI/Text Shader"));
-		predLR.material.color = Color.red;
+		predLR.material.color = this.leader.GetComponent<followPath>().path.GetComponent<pathPoints>().debugColor;
 
 		coneLR.numPositions = 4;
 		predLR.numPositions = 20;
@@ -61,6 +61,7 @@ public class followChaser : MonoBehaviour {
 		GM.lookAt2d(gameObject, leader.transform.position);
 		int iter = 0;
 		if (GM.mode == "cone check") {
+			coneLR.enabled = true;
 			//check if looking at the leader resulted in any cone collisions
 			GM.avoidConeCollisions(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
 				(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
@@ -74,6 +75,7 @@ public class followChaser : MonoBehaviour {
 			}
 		}
 		else if (GM.mode == "collision prediction") {
+			coneLR.enabled = false;
 			//take into account our speed and the speed of those around us to predict the closest future 'collision'
 			Vector3 colPos = GM.predictNearestCollision(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
 				(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
@@ -85,7 +87,7 @@ public class followChaser : MonoBehaviour {
 
 				float minDist = 2;
 				//rotate inversely proportional to our distance from the predicted collision location
-				transform.rotation *= Quaternion.Euler(0, 0, 10 * ((float)minDist / Vector3.Distance(colPos,transform.position)));
+				transform.rotation *= Quaternion.Euler(0, 0, 2 * ((float)minDist / Vector3.Distance(colPos,transform.position)));
 			}
 		}
 
