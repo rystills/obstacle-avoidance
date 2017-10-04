@@ -40,7 +40,6 @@ public class followChaser : MonoBehaviour {
 		float moveDist = spd * Time.deltaTime;
 
 		//attempt to look at the leader and check if this results in any cone collisions
-		coneHitsThisFrame = 0;
 		GM.lookAt2d(gameObject, leader.transform.position);
 		GM.avoidConeCollisions(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
 			(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
@@ -50,11 +49,11 @@ public class followChaser : MonoBehaviour {
 		//cap iterations at 100 as a failsafe, in case we find ourselves surrounded on all directions
 		while (coneHitsThisFrame != 0 && ++iter <= 100) {
 			transform.rotation *= Quaternion.Euler(0, 0, coneHitsThisFrame * 4);
-			coneHitsThisFrame = 0;
 			GM.avoidConeCollisions(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
 			(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
 		}
 
+		//now that we've finalized our angle to avoid collisions, we can safely move forward
 		transform.Translate(Vector3.up * (moveDist > remDist ? remDist : moveDist));
 
 		//poll through all other flock units to check for collisions

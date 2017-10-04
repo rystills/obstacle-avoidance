@@ -23,6 +23,7 @@ public class GM : MonoBehaviour {
 	public static void avoidConeCollisions(GameObject a, List<GameObject> objs) {
 		//perform a cone check on each passed in object
 		followChaser fc = a.GetComponent<followChaser>();
+		fc.coneHitsThisFrame = 0;
 		foreach (GameObject o in objs) {
 			if (coneCheck(a, o)) {
 				//cone check returned a collision; turn at a rate inversely proportional to our distance from the object
