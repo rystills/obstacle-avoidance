@@ -58,10 +58,10 @@ public class followChaser : MonoBehaviour {
 
 		colPredX = colPredY = null;
 
+		GM.lookAt2d(gameObject, leader.transform.position);
 		int iter = 0;
 		if (GM.mode == "cone check") {
-			//attempt to look at the leader and check if this results in any cone collisions
-			GM.lookAt2d(gameObject, leader.transform.position);
+			//check if looking at the leader resulted in any cone collisions
 			GM.avoidConeCollisions(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
 				(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
 

@@ -66,10 +66,14 @@ public class GM : MonoBehaviour {
 			Vector3 vc = afc.spd * a.transform.up;
 			Vector3 dv = vt - vc;
 
-			tClosest = -(Vector3.Dot(dp, dv) / Mathf.Pow(Mathf.Abs(dv), 2));
+			float tClosest = -(Vector3.Dot(dp, dv) / Mathf.Pow(Mathf.Abs(dv.magnitude), 2));
 
+			//ignore collisions in the past
+			if (tClosest < 0) {
+				continue;
+			}
 			Vector3 pcf = a.transform.position + vc * tClosest;
-			Vector3 ptf = a.transform.position + vc * tClosest;
+			Vector3 ptf = b.transform.position + vt * tClosest;
 
 			float colDist = Vector3.Distance(pcf,ptf);
 			if (colDist < (afc.radius + bfc.radius)) {
