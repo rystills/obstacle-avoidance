@@ -9,6 +9,7 @@ public class followChaser : MonoBehaviour {
 	public float radius;
 	public float coneLength;
 	public float coneArc;
+	public int coneHitsThisFrame = 0;
 
 	//we will line renderer to display our cone check visually
 	private LineRenderer LR;
@@ -57,6 +58,8 @@ public class followChaser : MonoBehaviour {
 		//start by setting the first and last points of the cone render to our starting position
 		LR.SetPosition(0, new Vector3(transform.position.x, transform.position.y, transform.position.z));
 		LR.SetPosition(3, new Vector3(transform.position.x, transform.position.y, transform.position.z));
+
+		LR.material.color = (coneHitsThisFrame > 0 ? Color.red : Color.yellow);
 
 		//get the two additional points of our cone
 		Quaternion curRot = transform.rotation;
