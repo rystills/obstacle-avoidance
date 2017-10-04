@@ -53,18 +53,31 @@ public class GM : MonoBehaviour {
 		followChaser afc = a.GetComponent<followChaser>();
 		float closestPredictedDistance = -1;
 		afc.closestPredictedUnit = null;
-		Vector3 closestPredictedLoc;
+		Vector3 closestPredictedLoc = Vector3.zero;
 
 		//iterate over all passed in objects to find the one which will collide with us the soonest
 		for (var i = 0; i < objs.Count; ++i) {
 			GameObject b = objs[i];
 			followChaser bfc = b.GetComponent<followChaser>();
-			float colDist = -1;
+
+			//calculate our collision prediction between a and b now
+			Vector3 dp = b.transform.position - a.transform.position;
+			Vector3 vt = bfc.spd * b.transform.up;
+			Vector3 vc = afc.spd * a.transform.up;
+			Vector3 dv = vt - vc;
+
+			tClosest = -(Vector3.Dot(dp, dv) / Mathf.Pow(Mathf.Abs(dv), 2));
+
+			Vector3 pcf = a.transform.position + vc * tClosest;
+			Vector3 ptf = a.transform.position + vc * tClosest;
+
+			float colDist = Vector3.Distance(pcf,ptf);
 			if (colDist < (afc.radius + bfc.radius)) {
 				//check if the distance at the time of collision will cause an intersection 
 				if (closestPredictedDistance == -1 || colDist < closestPredictedDistance) {
-					colDist = closestPredictedDistance;
+					closestPredictedDistance = colDist;
 					afc.closestPredictedUnit = b;
+					closestPredictedLoc = pcf;
 				}
 			}
 		}
