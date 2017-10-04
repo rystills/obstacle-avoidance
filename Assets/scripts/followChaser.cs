@@ -62,6 +62,7 @@ public class followChaser : MonoBehaviour {
 
 		int iter = 0;
 		if (GM.mode == "cone check") {
+			spd = maxSpd;
 			colPredX = colPredY = null;
 			coneLR.enabled = true;
 			GM.lookAt2d(gameObject, leader.transform.position);
