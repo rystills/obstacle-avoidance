@@ -10,7 +10,6 @@ public class followChaser : MonoBehaviour {
 	public float coneLength;
 	public float coneArc;
 	public int coneHitsThisFrame = 0;
-	public float closestPredictedDistance = 0;
 	public GameObject closestPredictedUnit = null;
 
 	private float? colPredX = null;
@@ -85,10 +84,9 @@ public class followChaser : MonoBehaviour {
 				colPredY = colPos.y;
 
 				float minDist = 5;
-				//if our closest predicted distance will cause our radii to collide, rotate inversely proportional to our distance from that spot
-				if (closestPredictedDistance < (this.radius + closestPredictedUnit.GetComponent<followChaser>().radius)) {
-					transform.rotation *= Quaternion.Euler(0, 0, Time.deltaTime * (minDist / (minDist - Vector3.Distance(transform.position, closestPredictedUnit.transform.position))));
-				}
+				//rotate inversely proportional to our distance from the predicted collision location
+				transform.rotation *= Quaternion.Euler(0, 0, Time.deltaTime * (minDist / 
+					(minDist - Vector3.Distance(transform.position, closestPredictedUnit.transform.position))));
 			}
 		}
 

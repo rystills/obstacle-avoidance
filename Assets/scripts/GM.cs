@@ -50,7 +50,25 @@ public class GM : MonoBehaviour {
 	 * @param objs: the list of objects against which we should check for future collisions
 	 */
 	public static Vector3 predictNearestCollision(GameObject a, List<GameObject> objs) {
-		return a.transform.position;
+		followChaser afc = a.GetComponent<followChaser>();
+		float closestPredictedDistance = -1;
+		afc.closestPredictedUnit = null;
+		Vector3 closestPredictedLoc;
+
+		//iterate over all passed in objects to find the one which will collide with us the soonest
+		for (var i = 0; i < objs.Count; ++i) {
+			GameObject b = objs[i];
+			followChaser bfc = b.GetComponent<followChaser>();
+			float colDist = -1;
+			if (colDist < (afc.radius + bfc.radius)) {
+				//check if the distance at the time of collision will cause an intersection 
+				if (closestPredictedDistance == -1 || colDist < closestPredictedDistance) {
+					colDist = closestPredictedDistance;
+					afc.closestPredictedUnit = b;
+				}
+			}
+		}
+		return closestPredictedLoc;
 	}
 
 	/**
