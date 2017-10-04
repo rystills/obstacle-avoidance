@@ -45,6 +45,15 @@ public class GM : MonoBehaviour {
 	}
 
 	/**
+	 * use collision prediction to determine the nearest future collision between the input object and list of other objects
+	 * @param a: the object for which we wish to predict the nearesst collision
+	 * @param objs: the list of objects against which we should check for future collisions
+	 */
+	public static Vector3 predictNearestCollision(GameObject a, List<GameObject> objs) {
+		return a.transform.position;
+	}
+
+	/**
 	 * determine whether or not a cone extended from object a contains object b
 	 * @param a: the object from which to extend the cone
 	 * @param b: the object to check against the cone

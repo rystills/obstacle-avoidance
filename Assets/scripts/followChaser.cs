@@ -33,13 +33,13 @@ public class followChaser : MonoBehaviour {
 		coneLR = gameObject.AddComponent<LineRenderer>();
 		coneLR.sortingOrder = 1;
 		predLR = colPredDrawer.AddComponent<LineRenderer>();
-		predLR.sortingOrder = 2;
+		predLR.sortingOrder = 3;
 
 		//set some default values for the line renderer settings
 		coneLR.startWidth = .02f;
 		coneLR.endWidth = .02f;
-		predLR.startWidth = .25f;
-		predLR.endWidth = .25f;
+		predLR.startWidth = .15f;
+		predLR.endWidth = .15f;
 
 		coneLR.material = new Material(Shader.Find("GUI/Text Shader"));
 		coneLR.material.color = Color.yellow;
@@ -51,11 +51,11 @@ public class followChaser : MonoBehaviour {
 	}
 
 	void Update() {
-		colPredX = 3;
-		colPredY = 2;
 		//get the distance from the path leader to avoid moving too far
 		float remDist = Vector3.Distance(transform.position, leader.transform.position);
 		float moveDist = spd * Time.deltaTime;
+
+		colPredX = colPredY = null;
 
 		int iter = 0;
 		if (GM.mode == "cone check") {
@@ -73,8 +73,11 @@ public class followChaser : MonoBehaviour {
 			}
 		}
 		else if (GM.mode == "collision prediction") {
-			//take into account our speed and the speed of those around us to predict whether or not a collision will occur
-
+			//take into account our speed and the speed of those around us to predict the closest future 'collision'
+			Vector3 colPos = GM.predictNearestCollision(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
+				(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
+			colPredX = colPos.x;
+			colPredY = colPos.y;
 		}
 
 		//now that we've finalized our angle to avoid collisions, we can safely move forward
@@ -115,8 +118,8 @@ public class followChaser : MonoBehaviour {
 			predLR.enabled = true;
 			for (int i = 0; i < predLR.numPositions; ++i) {
 				float angle = (float)i / (predLR.numPositions - 2) * 2 * Mathf.PI;
-				float px = colPredX.Value + Mathf.Cos(angle) * .1f;
-				float py = colPredY.Value + Mathf.Sin(angle) * .1f;
+				float px = colPredX.Value + Mathf.Cos(angle) * .06f;
+				float py = colPredY.Value + Mathf.Sin(angle) * .06f;
 				predLR.SetPosition(i, new Vector3(px, py, 0));
 			}
 		}
