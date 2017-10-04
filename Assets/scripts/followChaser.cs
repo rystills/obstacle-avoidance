@@ -28,7 +28,7 @@ public class followChaser : MonoBehaviour {
 		LR.startWidth = .02f;
 		LR.endWidth = .02f;
 
-		LR.material = new Material(Shader.Find("Unlit/Color"));
+		LR.material = new Material(Shader.Find("GUI/Text Shader"));
 		LR.material.color = Color.yellow;
 
 		LR.numPositions = 4;
