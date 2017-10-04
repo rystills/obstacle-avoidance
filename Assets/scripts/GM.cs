@@ -21,10 +21,8 @@ public class GM : MonoBehaviour {
 	 * @param objs: the list of objects to check against
 	 */
 	public static void avoidConeCollisions(GameObject a, List<GameObject> objs) {
-		Debug.Log(a.transform.rotation);
 		//perform a cone check on each passed in object
 		followChaser fc = a.GetComponent<followChaser>();
-		fc.coneHitsThisFrame = 0;
 		int maxTurn = 10;
 		foreach (GameObject o in objs) {
 			if (coneCheck(a, o)) {

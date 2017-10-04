@@ -10,6 +10,7 @@ public class followChaser : MonoBehaviour {
 	public float coneLength;
 	public float coneArc;
 	public int coneHitsThisFrame = 0;
+	private float maxAngVel = 5;
 
 	//we will line renderer to display our cone check visually
 	private LineRenderer LR;
@@ -19,8 +20,9 @@ public class followChaser : MonoBehaviour {
 		spd = leader.GetComponent<followPath>().spd + 1;
 		transform.position = leader.transform.position;
 
-		//initialize our line renderer
+		//initialize our line renderer and set its render order to be in front of the path display
 		LR = gameObject.AddComponent<LineRenderer>();
+		LR.sortingOrder = 1;
 
 		//set some default values for the line renderer settings
 		LR.startWidth = .02f;
@@ -33,14 +35,25 @@ public class followChaser : MonoBehaviour {
 	}
 
 	void Update() {
-		//approach the leader without passing it
-		GM.lookAt2d(gameObject, leader.transform.position);
+		//get the distance from the path leader to avoid moving too far
 		float remDist = Vector3.Distance(transform.position, leader.transform.position);
 		float moveDist = spd * Time.deltaTime;
 
 		//perform a cone check for collisions with objects not on our path, adjusting our rotation to avoid them
 		GM.avoidConeCollisions(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
 			(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
+
+		//if nothing was detected during our cone check, rotate to face the path leader at a maximum angular velocity
+		if (coneHitsThisFrame == 0) {
+			//get our current and desired rotations, as well as the total desired change in angle
+			Quaternion startRot = transform.rotation;
+			GM.lookAt2d(gameObject, leader.transform.position);
+			Quaternion wantRot = transform.rotation;
+			float rotChange = Quaternion.Angle(startRot, wantRot);
+
+			//rotate at most maxAngVel to face wantRot
+			Quaternion.Lerp(startRot, wantRot, Time.deltaTime * maxAngVel);
+		}
 
 		transform.Translate(Vector3.up * (moveDist > remDist ? remDist : moveDist));
 
