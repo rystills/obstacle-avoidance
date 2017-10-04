@@ -39,27 +39,26 @@ public class followChaser : MonoBehaviour {
 		float remDist = Vector3.Distance(transform.position, leader.transform.position);
 		float moveDist = spd * Time.deltaTime;
 
+		//attempt to look at the leader and check if this results in any cone collisions
+		bool coneHit = false;
 		coneHitsThisFrame = 0;
-		while (coneHitsThisFrame == 0) {
-			//get our current and desired rotations, as well as the total desired change in angle
-			Quaternion startRot = transform.rotation;
-			GM.lookAt2d(gameObject, leader.transform.position);
+		GM.lookAt2d(gameObject, leader.transform.position);
+		GM.avoidConeCollisions(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
+			(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
 
+		//if looking at the leader resulted in one or more cone checks, start rotating right until we have resolved all collisions
+		int iter = 0;
+		while (coneHitsThisFrame != 0) {
+			coneHit = true;
+			transform.rotation *= Quaternion.Euler(0, 0, coneHitsThisFrame * 4);
+			coneHitsThisFrame = 0;
 			GM.avoidConeCollisions(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
-	(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
-			if (coneHitsThisFrame == 0) {
+			(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
+
+			//cap iterations at 100 as a failsafe, in case we find ourselves surrounded on all directions
+			if (++iter > 100) {
 				break;
 			}
-
-			Quaternion wantRot = transform.rotation;
-			float rotChange = Quaternion.Angle(startRot, wantRot);
-
-			//rotate at most maxAngVel to face wantRot
-			transform.rotation = Quaternion.Lerp(startRot, wantRot, stepAngVel);
-
-			//perform a cone check for collisions with objects not on our path, adjusting our rotation to avoid them
-			GM.avoidConeCollisions(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
-				(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
 		}
 
 		transform.Translate(Vector3.up * (moveDist > remDist ? remDist : moveDist));
@@ -79,7 +78,7 @@ public class followChaser : MonoBehaviour {
 		LR.SetPosition(0, new Vector3(transform.position.x, transform.position.y, transform.position.z));
 		LR.SetPosition(3, new Vector3(transform.position.x, transform.position.y, transform.position.z));
 
-		LR.material.color = (coneHitsThisFrame > 0 ? Color.red : Color.yellow);
+		LR.material.color = (coneHit ? Color.red : Color.yellow);
 
 		//get the two additional points of our cone
 		Quaternion curRot = transform.rotation;

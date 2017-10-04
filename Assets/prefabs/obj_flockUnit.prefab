@@ -56,7 +56,7 @@ MonoBehaviour:
   spd: 2
   radius: 0.2
   coneLength: 2.5
-  coneArc: 75
+  coneArc: 115
   coneHitsThisFrame: 0
 --- !u!212 &212867915749167504
 SpriteRenderer:
