@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class followChaser : MonoBehaviour {
 	public GameObject leader;
+	public float maxSpd;
 	public float spd;
 	public float radius;
 	public float coneLength;
@@ -16,7 +17,6 @@ public class followChaser : MonoBehaviour {
 	private float? colPredY = null;
 
 	//keep track of a timer for evading predicted collisions
-	public float evadeMaxTimer = 1f;
 	public float evadeTimer = 0;
 
 	//we will use a line renderer to display our cone check and collision prediction
@@ -26,7 +26,7 @@ public class followChaser : MonoBehaviour {
 
 	public void init() {
 		//adopt a slightly faster speed than the leader so that we do not fall out of formation
-		spd = leader.GetComponent<followPath>().spd + 1;
+		spd = maxSpd;
 		transform.position = leader.transform.position;
 
 		//instantiate a child object who will be responsible for rendering our predicted collision location when necessary
@@ -78,11 +78,17 @@ public class followChaser : MonoBehaviour {
 			}
 		}
 		else if (GM.mode == "collision prediction") {
-			Debug.Log(evadeTimer);
+			//don't do anything if we are in the process of evading the predicted collision location
 			if (evadeTimer > 0) {
 				evadeTimer -= Time.deltaTime;
 			}
+			else if (this.leader.GetComponent<followPath>().curPt <= 8) {
+				//if we are on our way back to the start of the path, don't worry about collisions as we will fly in line anyway
+				GM.lookAt2d(gameObject, leader.transform.position);
+				colPredX = colPredY = null;
+			}
 			else {
+				spd = maxSpd;
 				colPredX = colPredY = null;
 				GM.lookAt2d(gameObject, leader.transform.position);
 				coneLR.enabled = false;
@@ -97,10 +103,11 @@ public class followChaser : MonoBehaviour {
 					if (colDist < 2) {
 						colPredX = colPos.x;
 						colPredY = colPos.y;
-						
+
 						//rotate a bit to dodge the most immediate collision
 						transform.rotation *= Quaternion.Euler(0, 0, 18);
-						evadeTimer = evadeMaxTimer;
+						evadeTimer = 2.2f;
+						spd = leader.GetComponent<followPath>().spd;
 					}
 				}
 			}

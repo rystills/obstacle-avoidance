@@ -53,13 +53,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leader: {fileID: 0}
-  spd: 1.75
+  maxSpd: 2.5
+  spd: 0
   radius: 0.2
   coneLength: 2.5
   coneArc: 115
   coneHitsThisFrame: 0
   closestPredictedUnit: {fileID: 0}
-  evadeMaxTimer: 2
   evadeTimer: 0
 --- !u!212 &212867915749167504
 SpriteRenderer:
