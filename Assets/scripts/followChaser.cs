@@ -26,6 +26,8 @@ public class followChaser : MonoBehaviour {
 
 		//instantiate a child object who will be responsible for rendering our predicted collision location when necessary
 		colPredDrawer = new GameObject();
+		colPredDrawer.name = "collision prediction renderer";
+		colPredDrawer.transform.parent = this.transform;
 
 		//initialize our line renderers and set their render order to be in front of the path but behind the UI
 		coneLR = gameObject.AddComponent<LineRenderer>();
