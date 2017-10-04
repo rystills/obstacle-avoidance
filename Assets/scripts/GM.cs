@@ -9,7 +9,7 @@ public class GM : MonoBehaviour {
 	public GM Instance { get { return m_Instance; } }
 
 	//public variables for global use
-	public string mode = "cone check";
+	public static string mode = "cone check";
 
 	void Awake() {
 		m_Instance = this;

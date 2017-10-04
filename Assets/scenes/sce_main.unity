@@ -555,7 +555,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_TargetDisplay: 0
 --- !u!224 &1155838966
 RectTransform:
@@ -682,7 +682,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c5c7e55496a35b4ca69ec6192309cf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: cone check
 --- !u!1 &1890243661
 GameObject:
   m_ObjectHideFlags: 0
