@@ -10,7 +10,7 @@ public class followChaser : MonoBehaviour {
 	public float coneLength;
 	public float coneArc;
 	public int coneHitsThisFrame = 0;
-	private float maxAngVel = 5;
+	private float stepAngVel = .01f;
 
 	//we will line renderer to display our cone check visually
 	private LineRenderer LR;
@@ -39,20 +39,27 @@ public class followChaser : MonoBehaviour {
 		float remDist = Vector3.Distance(transform.position, leader.transform.position);
 		float moveDist = spd * Time.deltaTime;
 
-		//perform a cone check for collisions with objects not on our path, adjusting our rotation to avoid them
-		GM.avoidConeCollisions(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
-			(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
-
-		//if nothing was detected during our cone check, rotate to face the path leader at a maximum angular velocity
-		if (coneHitsThisFrame == 0) {
+		coneHitsThisFrame = 0;
+		while (coneHitsThisFrame == 0) {
 			//get our current and desired rotations, as well as the total desired change in angle
 			Quaternion startRot = transform.rotation;
 			GM.lookAt2d(gameObject, leader.transform.position);
+
+			GM.avoidConeCollisions(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
+	(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
+			if (coneHitsThisFrame == 0) {
+				break;
+			}
+
 			Quaternion wantRot = transform.rotation;
 			float rotChange = Quaternion.Angle(startRot, wantRot);
 
 			//rotate at most maxAngVel to face wantRot
-			Quaternion.Lerp(startRot, wantRot, Time.deltaTime * maxAngVel);
+			transform.rotation = Quaternion.Lerp(startRot, wantRot, stepAngVel);
+
+			//perform a cone check for collisions with objects not on our path, adjusting our rotation to avoid them
+			GM.avoidConeCollisions(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
+				(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
 		}
 
 		transform.Translate(Vector3.up * (moveDist > remDist ? remDist : moveDist));
