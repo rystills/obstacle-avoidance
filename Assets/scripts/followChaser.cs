@@ -15,6 +15,10 @@ public class followChaser : MonoBehaviour {
 	private float? colPredX = null;
 	private float? colPredY = null;
 
+	//keep track of a timer for evading predicted collisions
+	public float evadeMaxTimer = 1f;
+	public float evadeTimer = 0;
+
 	//we will use a line renderer to display our cone check and collision prediction
 	private LineRenderer coneLR;
 	private LineRenderer predLR;
@@ -56,12 +60,11 @@ public class followChaser : MonoBehaviour {
 		float remDist = Vector3.Distance(transform.position, leader.transform.position);
 		float moveDist = spd * Time.deltaTime;
 
-		colPredX = colPredY = null;
-
-		GM.lookAt2d(gameObject, leader.transform.position);
 		int iter = 0;
 		if (GM.mode == "cone check") {
+			colPredX = colPredY = null;
 			coneLR.enabled = true;
+			GM.lookAt2d(gameObject, leader.transform.position);
 			//check if looking at the leader resulted in any cone collisions
 			GM.avoidConeCollisions(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
 				(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
@@ -75,19 +78,31 @@ public class followChaser : MonoBehaviour {
 			}
 		}
 		else if (GM.mode == "collision prediction") {
-			coneLR.enabled = false;
-			//take into account our speed and the speed of those around us to predict the closest future 'collision'
-			Vector3 colPos = GM.predictNearestCollision(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
-				(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
+			Debug.Log(evadeTimer);
+			if (evadeTimer > 0) {
+				evadeTimer -= Time.deltaTime;
+			}
+			else {
+				colPredX = colPredY = null;
+				GM.lookAt2d(gameObject, leader.transform.position);
+				coneLR.enabled = false;
+				//take into account our speed and the speed of those around us to predict the closest future 'collision'
+				Vector3 colPos = GM.predictNearestCollision(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
+					(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
 
-			//if we didn't predict a collision with anybody, we have nothing more to do
-			if (closestPredictedUnit != null) {
-				colPredX = colPos.x;
-				colPredY = colPos.y;
-
-				float minDist = 2;
-				//rotate inversely proportional to our distance from the predicted collision location
-				transform.rotation *= Quaternion.Euler(0, 0, 2 * ((float)minDist / Vector3.Distance(colPos,transform.position)));
+				//if we didn't predict a collision with anybody, we have nothing more to do
+				if (closestPredictedUnit != null) {
+					float colDist = Vector3.Distance(colPos, transform.position);
+					//ignore collisions that are too far away
+					if (colDist < 2) {
+						colPredX = colPos.x;
+						colPredY = colPos.y;
+						
+						//rotate a bit to dodge the most immediate collision
+						transform.rotation *= Quaternion.Euler(0, 0, 18);
+						evadeTimer = evadeMaxTimer;
+					}
+				}
 			}
 		}
 
