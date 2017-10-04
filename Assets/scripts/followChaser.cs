@@ -83,10 +83,9 @@ public class followChaser : MonoBehaviour {
 				colPredX = colPos.x;
 				colPredY = colPos.y;
 
-				float minDist = 5;
+				float minDist = 2;
 				//rotate inversely proportional to our distance from the predicted collision location
-				transform.rotation *= Quaternion.Euler(0, 0, Time.deltaTime * (minDist / 
-					(minDist - Vector3.Distance(transform.position, closestPredictedUnit.transform.position))));
+				transform.rotation *= Quaternion.Euler(0, 0, 10 * ((float)minDist / Vector3.Distance(colPos,transform.position)));
 			}
 		}
 
