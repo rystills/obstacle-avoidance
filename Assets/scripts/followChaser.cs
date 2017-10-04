@@ -10,6 +10,8 @@ public class followChaser : MonoBehaviour {
 	public float coneLength;
 	public float coneArc;
 	public int coneHitsThisFrame = 0;
+	public float closestPredictedDistance = 0;
+	public GameObject closestPredictedUnit = null;
 
 	private float? colPredX = null;
 	private float? colPredY = null;
@@ -76,8 +78,18 @@ public class followChaser : MonoBehaviour {
 			//take into account our speed and the speed of those around us to predict the closest future 'collision'
 			Vector3 colPos = GM.predictNearestCollision(gameObject, GameObject.FindGameObjectsWithTag("flockUnit").Where
 				(x => x.GetComponent<followChaser>().leader != this.leader).ToList());
-			colPredX = colPos.x;
-			colPredY = colPos.y;
+
+			//if we didn't predict a collision with anybody, we have nothing more to do
+			if (closestPredictedUnit != null) {
+				colPredX = colPos.x;
+				colPredY = colPos.y;
+
+				float minDist = 5;
+				//if our closest predicted distance will cause our radii to collide, rotate inversely proportional to our distance from that spot
+				if (closestPredictedDistance < (this.radius + closestPredictedUnit.GetComponent<followChaser>().radius)) {
+					transform.rotation *= Quaternion.Euler(0, 0, Time.deltaTime * (minDist / (minDist - Vector3.Distance(transform.position, closestPredictedUnit.transform.position))));
+				}
+			}
 		}
 
 		//now that we've finalized our angle to avoid collisions, we can safely move forward
