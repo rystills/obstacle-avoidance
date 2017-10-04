@@ -66,7 +66,7 @@ public class followChaser : MonoBehaviour {
 		Vector3 curPos = transform.position;
 		for (int i = 0; i < 2; ++i) {
 			//set our rotation to half of our arc radius and move forward by our arc length
-			transform.rotation = curRot * Quaternion.Euler(0, 0, coneArc * (i == 0 ? -1 : 1));
+			transform.rotation = curRot * Quaternion.Euler(0, 0, coneArc/2 * (i == 0 ? -1 : 1));
 			transform.Translate(Vector3.up * coneLength);
 			//add this new position to the line renderer
 			LR.SetPosition(i+1, new Vector3(transform.position.x, transform.position.y, transform.position.z));
