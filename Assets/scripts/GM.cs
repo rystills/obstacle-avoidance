@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 //GameManager class for storing global functions
 public class GM : MonoBehaviour {
 	private GM m_Instance;
 	public GM Instance { get { return m_Instance; } }
+
+	//public variables for global use
+	public string mode = "cone check";
 
 	void Awake() {
 		m_Instance = this;
@@ -13,6 +17,14 @@ public class GM : MonoBehaviour {
 
 	void OnDestroy() {
 		m_Instance = null;
+	}
+
+	/**
+	 * toggle the simulation mode between 'cone check' and 'collision prediction'
+	 */
+	public void toggleMode() {
+		mode = (mode == "cone check" ? "collision prediction": "cone check");
+		GameObject.FindGameObjectWithTag("modeToggleButton").GetComponentInChildren<Text>().text = "Mode: " + mode;
 	}
 	
 	/**
