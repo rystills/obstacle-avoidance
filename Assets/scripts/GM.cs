@@ -148,7 +148,7 @@ public class GM : MonoBehaviour {
 	/**
 	 * Overloads lookAt2d to support a Vector2d location
 	 */
-	public static void lookAt2d(Vector2 loc) {
-		lookAt2d(new Vector3(loc.x, loc.y, 0));
+	public static void lookAt2d(GameObject go, Vector2 loc) {
+		lookAt2d(go, new Vector3(loc.x, loc.y, 0));
 	}
 }
